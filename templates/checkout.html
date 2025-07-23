@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - CVC{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
+            <i class="fas fa-credit-card text-cvc-yellow mr-3"></i> Finalizar Compra
+        </h1>
+        
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Payment Form -->
+            <div class="lg:col-span-2">
+                <form action="{{ url_for('process_payment') }}" method="POST" class="space-y-6">
+                    <!-- Payment Method -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-credit-card text-cvc-yellow mr-2"></i> Forma de Pagamento
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 mb-6">
+                            <label class="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-cvc-yellow transition-colors payment-option">
+                                <input type="radio" name="payment_method" value="credit_card" checked class="sr-only">
+                                <div class="flex items-center">
+                                    <i class="fas fa-credit-card text-2xl text-cvc-blue mr-3"></i>
+                                    <div>
+                                        <p class="font-semibold">Cartão de Crédito</p>
+                                        <p class="text-sm text-gray-500">Até 12x sem juros</p>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <label class="border-2 border-gray-200 rounded-lg p-4 cursor-pointer hover:border-cvc-yellow transition-colors payment-option">
+                                <input type="radio" name="payment_method" value="pix" class="sr-only">
+                                <div class="flex items-center">
+                                    <i class="fab fa-pix text-2xl text-green-600 mr-3"></i>
+                                    <div>
+                                        <p class="font-semibold">PIX</p>
+                                        <p class="text-sm text-gray-500">Aprovação imediata</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <!-- Installments -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calculator text-cvc-orange"></i> Parcelamento
+                            </label>
+                            <select name="installments" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                                <option value="1">À vista - R$ {{ "%.2f"|format(total) }}</option>
+                                {% for i in range(2, 13) %}
+                                <option value="{{ i }}">{{ i }}x de R$ {{ "%.2f"|format(total/i) }} {% if i <= 12 %}sem juros{% endif %}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Card Details -->
+                        <div id="card_details" class="grid md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Número do Cartão</label>
+                                <input type="text" placeholder="0000 0000 0000 0000" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Validade</label>
+                                <input type="text" placeholder="MM/AA" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
+                                <input type="text" placeholder="000" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nome no Cartão</label>
+                                <input type="text" placeholder="Nome como impresso no cartão" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Billing Address -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-address-card text-cvc-yellow mr-2"></i> Dados de Cobrança
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CPF</label>
+                                <input type="text" placeholder="000.000.000-00" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CEP</label>
+                                <input type="text" placeholder="00000-000" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Telefone</label>
+                                <input type="text" placeholder="(11) 99999-9999" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full cvc-gradient text-white py-4 px-6 rounded-lg hover:opacity-90 transition-all duration-300 font-bold text-lg transform hover:scale-105 cvc-shadow">
+                        <i class="fas fa-lock"></i> Finalizar Pagamento - R$ {{ "%.2f"|format(total) }}
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6 sticky top-24 cvc-shadow">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-receipt text-cvc-yellow mr-2"></i> Resumo da Compra
+                    </h3>
+                    
+                    {% for item in cart_items %}
+                    <div class="border-b border-gray-200 pb-4 mb-4">
+                        <h4 class="font-semibold text-gray-800">{{ item[6] }}</h4>
+                        <p class="text-sm text-gray-600">{{ item[7] }}</p>
+                        <div class="text-sm text-gray-500 mt-2 space-y-1">
+                            <div><i class="fas fa-calendar-check text-cvc-yellow"></i> Check-in: {{ item[4] }}</div>
+                            <div><i class="fas fa-calendar-times text-cvc-yellow"></i> Check-out: {{ item[5] }}</div>
+                            <div><i class="fas fa-users text-cvc-yellow"></i> {{ item[3] }} viajante(s)</div>
+                        </div>
+                        <div class="text-right mt-2">
+                            <span class="font-bold text-cvc-orange">R$ {{ "%.2f"|format(item[7] * item[3]) }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between text-lg font-bold mb-2">
+                            <span>Total</span>
+                            <span class="text-cvc-orange">R$ {{ "%.2f"|format(total) }}</span>
+                        </div>
+                        <p class="text-sm text-gray-500">ou 12x de R$ {{ "%.2f"|format(total/12) }} sem juros</p>
+                    </div>
+                    
+                    <!-- Security Info -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                            <span>Pagamento 100% seguro</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-lock text-green-500 mr-2"></i>
+                            <span>Seus dados estão protegidos</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-certificate text-green-500 mr-2"></i>
+                            <span>Certificado SSL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Payment method toggle
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.payment-option').forEach(label => {
+                label.classList.remove('border-cvc-yellow', 'bg-yellow-50');
+                label.classList.add('border-gray-200');
+            });
+            this.parentElement.classList.add('border-cvc-yellow', 'bg-yellow-50');
+            this.parentElement.classList.remove('border-gray-200');
+            
+            // Show/hide card details
+            const cardDetails = document.getElementById('card_details');
+            if (this.value === 'credit_card') {
+                cardDetails.style.display = 'grid';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        });
+    });
+    
+    // Initialize first option
+    document.querySelector('input[name="payment_method"]:checked').dispatchEvent(new Event('change'));
+</script>
+{% endblock %}

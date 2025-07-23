@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro - CVC{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-lg shadow-xl p-8 cvc-shadow">
+            <div class="text-center mb-8">
+                <div class="flex justify-center mb-4">
+                    <div class="cvc-gradient text-white px-6 py-3 rounded-lg font-bold text-2xl">
+                        CVC
+                    </div>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">Criar Conta</h2>
+                <p class="text-gray-600 mt-2">Cadastre-se e comece a viajar</p>
+            </div>
+            
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user text-cvc-orange"></i> Nome Completo
+                    </label>
+                    <input type="text" name="name" required 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors"
+                           placeholder="Seu nome completo">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-envelope text-cvc-orange"></i> E-mail
+                    </label>
+                    <input type="email" name="email" required 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors"
+                           placeholder="seu@email.com">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone text-cvc-orange"></i> Telefone
+                    </label>
+                    <input type="tel" name="phone" 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors"
+                           placeholder="(11) 99999-9999">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock text-cvc-orange"></i> Senha
+                    </label>
+                    <input type="password" name="password" required 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors"
+                           placeholder="••••••••">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock text-cvc-orange"></i> Confirmar Senha
+                    </label>
+                    <input type="password" name="confirm_password" required 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors"
+                           placeholder="••••••••">
+                </div>
+                
+                <div class="flex items-start">
+                    <input type="checkbox" required class="mt-1 rounded border-gray-300 text-cvc-yellow focus:ring-cvc-yellow">
+                    <span class="ml-2 text-sm text-gray-600">
+                        Concordo com os 
+                        <a href="#" class="text-cvc-orange hover:text-orange-600">Termos de Uso</a> e 
+                        <a href="#" class="text-cvc-orange hover:text-orange-600">Política de Privacidade</a>
+                    </span>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full cvc-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 font-medium transform hover:scale-105 cvc-shadow">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    Já tem uma conta? 
+                    <a href="{{ url_for('login') }}" class="text-cvc-orange hover:text-orange-600 font-medium">
+                        Faça login
+                    </a>
+                </p>
+            </div>
+            
+            <!-- Social Register -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fab fa-google text-red-500 mr-2"></i>
+                        <span class="text-sm font-medium">Google</span>
+                    </button>
+                    <button class="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fab fa-facebook-f text-blue-600 mr-2"></i>
+                        <span class="text-sm font-medium">Facebook</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Pacotes - CVC{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Filters Sidebar -->
+        <div class="lg:w-1/4">
+            <div class="bg-white rounded-lg shadow-lg p-6 sticky top-24">
+                <h3 class="text-xl font-bold mb-6 text-gray-800 flex items-center">
+                    <i class="fas fa-filter text-cvc-yellow mr-2"></i> Filtros
+                </h3>
+                
+                <form action="{{ url_for('search') }}" method="GET">
+                    <!-- Destination -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-map-marker-alt text-cvc-orange"></i> Destino
+                        </label>
+                        <input type="text" name="destination" value="{{ search_params.destination or '' }}" 
+                               placeholder="Digite o destino" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                    
+                    <!-- Category -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-tags text-cvc-orange"></i> Categoria
+                        </label>
+                        <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            <option value="">Todas as categorias</option>
+                            <option value="praia" {% if search_params.category == 'praia' %}selected{% endif %}>🏖️ Praia</option>
+                            <option value="aventura" {% if search_params.category == 'aventura' %}selected{% endif %}>🏔️ Aventura</option>
+                            <option value="família" {% if search_params.category == 'família' %}selected{% endif %}>👨‍👩‍👧‍👦 Família</option>
+                            <option value="romântico" {% if search_params.category == 'romântico' %}selected{% endif %}>💕 Romântico</option>
+                            <option value="cidade" {% if search_params.category == 'cidade' %}selected{% endif %}>🏙️ Cidade</option>
+                            <option value="lua-de-mel" {% if search_params.category == 'lua-de-mel' %}selected{% endif %}>💒 Lua de Mel</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-dollar-sign text-cvc-orange"></i> Faixa de Preço
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" name="min_price" value="{{ search_params.min_price or '' }}" 
+                                   placeholder="Min" 
+                                   class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            <input type="number" name="max_price" value="{{ search_params.max_price or '' }}" 
+                                   placeholder="Max" 
+                                   class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full cvc-gradient text-white py-2 px-4 rounded-lg hover:opacity-90 transition-all duration-300 font-medium transform hover:scale-105 cvc-shadow">
+                        <i class="fas fa-search"></i> Filtrar
+                    </button>
+                    
+                    <a href="{{ url_for('search') }}" class="w-full block mt-2 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-center">
+                        <i class="fas fa-times"></i> Limpar Filtros
+                    </a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="lg:w-3/4">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Pacotes Encontrados</h2>
+                <p class="text-gray-600">{{ packages|length }} pacote(s) encontrado(s)</p>
+            </div>
+            
+            {% if packages %}
+                <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {% for package in packages %}
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group hover-scale">
+                        <div class="relative">
+                            <img src="{{ package[7] }}" alt="{{ package[1] }}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                            <div class="absolute top-4 left-4 bg-cvc-yellow text-gray-800 px-3 py-1 rounded-full text-sm font-bold">
+                                {{ package[6].title() }}
+                            </div>
+                            {% if package[11] %}
+                            <div class="absolute top-4 right-4 bg-cvc-red text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce-in">
+                                🔥 Oferta Especial
+                            </div>
+                            {% endif %}
+                            <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                                <i class="fas fa-calendar"></i> {{ package[5] }} dias
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2 text-gray-800">{{ package[1] }}</h3>
+                            <p class="text-gray-600 mb-2 line-clamp-2">{{ package[3][:100] }}...</p>
+                            <p class="text-sm text-gray-500 mb-4">
+                                <i class="fas fa-map-marker-alt text-cvc-orange"></i> {{ package[2] }}
+                            </p>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-2xl font-bold text-cvc-orange">R$ {{ "%.2f"|format(package[4]) }}</span>
+                                    <p class="text-sm text-gray-500">ou 12x de R$ {{ "%.2f"|format(package[4]/12) }}</p>
+                                </div>
+                                <a href="{{ url_for('package_detail', package_id=package[0]) }}" 
+                                   class="cvc-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105">
+                                    Ver Detalhes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-16">
+                    <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-600 mb-2">Nenhum pacote encontrado</h3>
+                    <p class="text-gray-500 mb-6">Tente ajustar seus filtros de busca</p>
+                    <a href="{{ url_for('search') }}" class="cvc-gradient text-white px-6 py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-medium">
+                        <i class="fas fa-refresh"></i> Ver Todos os Pacotes
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

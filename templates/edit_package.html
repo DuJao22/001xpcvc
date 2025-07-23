@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Pacote - CVC Admin{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex items-center mb-8">
+            <a href="{{ url_for('admin') }}" class="text-cvc-orange hover:text-orange-600 mr-4 bg-yellow-50 p-2 rounded-lg">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-800 flex items-center">
+                <i class="fas fa-edit text-cvc-yellow mr-3"></i> Editar Pacote
+            </h1>
+        </div>
+        
+        <form method="POST" class="bg-white rounded-lg shadow-lg p-8 cvc-shadow">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-heading text-cvc-orange"></i> Título do Pacote
+                        </label>
+                        <input type="text" name="title" value="{{ package[1] }}" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-map-marker-alt text-cvc-orange"></i> Destino
+                        </label>
+                        <input type="text" name="destination" value="{{ package[2] }}" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-tags text-cvc-orange"></i> Categoria
+                        </label>
+                        <select name="category" required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                            <option value="praia" {% if package[6] == 'praia' %}selected{% endif %}>🏖️ Praia</option>
+                            <option value="aventura" {% if package[6] == 'aventura' %}selected{% endif %}>🏔️ Aventura</option>
+                            <option value="família" {% if package[6] == 'família' %}selected{% endif %}>👨‍👩‍👧‍👦 Família</option>
+                            <option value="romântico" {% if package[6] == 'romântico' %}selected{% endif %}>💕 Romântico</option>
+                            <option value="cidade" {% if package[6] == 'cidade' %}selected{% endif %}>🏙️ Cidade</option>
+                            <option value="lua-de-mel" {% if package[6] == 'lua-de-mel' %}selected{% endif %}>💒 Lua de Mel</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-dollar-sign text-cvc-orange"></i> Preço (R$)
+                            </label>
+                            <input type="number" name="price" value="{{ package[4] }}" step="0.01" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar text-cvc-orange"></i> Duração (dias)
+                            </label>
+                            <input type="number" name="duration" value="{{ package[5] }}" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-image text-cvc-orange"></i> URL da Imagem
+                        </label>
+                        <input type="url" name="image_url" value="{{ package[7] }}" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-align-left text-cvc-orange"></i> Descrição
+                        </label>
+                        <textarea name="description" rows="4" required 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">{{ package[3] }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-check-circle text-cvc-orange"></i> O que está incluso
+                        </label>
+                        <textarea name="includes" rows="3" required 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">{{ package[8] }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-hotel text-cvc-orange"></i> Hospedagem
+                        </label>
+                        <input type="text" name="hotel" value="{{ package[9] }}" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-plane text-cvc-orange"></i> Transporte
+                        </label>
+                        <input type="text" name="transport" value="{{ package[10] }}" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow transition-colors">
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="featured" {% if package[11] %}checked{% endif %} 
+                                   class="rounded border-gray-300 text-cvc-yellow focus:ring-cvc-yellow">
+                            <span class="ml-2 text-sm font-medium text-gray-700">
+                                <i class="fas fa-star text-cvc-yellow"></i> Pacote em destaque
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-4 mt-8">
+                <a href="{{ url_for('admin') }}" 
+                   class="flex-1 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-center">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+                <button type="submit" 
+                        class="flex-1 cvc-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 font-medium transform hover:scale-105 cvc-shadow">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

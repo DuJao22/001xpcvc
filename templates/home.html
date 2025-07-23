@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section with Search -->
+<section class="cvc-gradient text-white py-16 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-bounce-in">Sua Viagem dos Sonhos</h1>
+            <p class="text-xl mb-8 animate-slide-up">Encontre os melhores destinos com os melhores preços</p>
+            <div class="flex justify-center space-x-4 text-sm">
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">✈️ Mais de 50 anos de experiência</span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">🏆 Melhor preço garantido</span>
+                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">🛡️ Pagamento 100% seguro</span>
+            </div>
+        </div>
+        
+        <!-- Search Form -->
+        <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-xl p-6 animate-slide-up cvc-shadow">
+            <form action="{{ url_for('search') }}" method="GET" class="grid md:grid-cols-5 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        <i class="fas fa-map-marker-alt text-cvc-orange"></i> Destino
+                    </label>
+                    <input type="text" name="destination" placeholder="Para onde vamos?" 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow text-gray-800 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        <i class="fas fa-calendar-alt text-cvc-orange"></i> Check-in
+                    </label>
+                    <input type="date" name="check_in" 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow text-gray-800 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        <i class="fas fa-calendar-alt text-cvc-orange"></i> Check-out
+                    </label>
+                    <input type="date" name="check_out" 
+                           class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-cvc-yellow text-gray-800 transition-colors">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full cvc-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 transition-all duration-300 font-bold transform hover:scale-105 cvc-shadow">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Offers Carousel -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">🔥 Ofertas Especiais</h2>
+            <p class="text-gray-600">Destinos incríveis com preços imperdíveis</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for package in featured_packages %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group hover-scale">
+                <div class="relative">
+                    <img src="{{ package[7] }}" alt="{{ package[1] }}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                    <div class="absolute top-4 right-4 bg-cvc-red text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce-in">
+                        🔥 Oferta Especial
+                    </div>
+                    <div class="absolute top-4 left-4 bg-cvc-yellow text-gray-800 px-3 py-1 rounded-full text-sm font-bold">
+                        {{ package[6].title() }}
+                    </div>
+                    <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                        <i class="fas fa-calendar"></i> {{ package[5] }} dias
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">{{ package[1] }}</h3>
+                    <p class="text-gray-600 mb-2 line-clamp-2">{{ package[3][:100] }}...</p>
+                    <p class="text-sm text-gray-500 mb-4">
+                        <i class="fas fa-map-marker-alt text-cvc-orange"></i> {{ package[2] }}
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-2xl font-bold text-cvc-orange">R$ {{ "%.2f"|format(package[4]) }}</span>
+                            <p class="text-sm text-gray-500">ou 12x de R$ {{ "%.2f"|format(package[4]/12) }}</p>
+                        </div>
+                        <a href="{{ url_for('package_detail', package_id=package[0]) }}" 
+                           class="cvc-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-all duration-300 transform hover:scale-105 font-medium">
+                            Ver Detalhes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-8">
+            <a href="{{ url_for('search') }}" class="cvc-gradient text-white px-8 py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-bold transform hover:scale-105 cvc-shadow">
+                <i class="fas fa-eye"></i> Ver Todos os Pacotes
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="bg-gray-100 py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Explore por Categoria</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <a href="{{ url_for('search', category='praia') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-umbrella-beach text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Praia</p>
+            </a>
+            <a href="{{ url_for('search', category='aventura') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-mountain text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Aventura</p>
+            </a>
+            <a href="{{ url_for('search', category='família') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-baby text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Família</p>
+            </a>
+            <a href="{{ url_for('search', category='romântico') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-heart text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Romântico</p>
+            </a>
+            <a href="{{ url_for('search', category='cidade') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-city text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Cidade</p>
+            </a>
+            <a href="{{ url_for('search', category='lua-de-mel') }}" class="text-center group">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 hover-scale group-hover:bg-cvc-yellow">
+                    <i class="fas fa-ring text-3xl text-cvc-blue group-hover:text-white transition-colors"></i>
+                </div>
+                <p class="font-semibold text-gray-700 group-hover:text-cvc-orange transition-colors">Lua de Mel</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose CVC -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Por que escolher a CVC?</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center group">
+                <div class="cvc-gradient text-white rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:bg-cvc-orange transition-all duration-300 hover-scale cvc-shadow">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                </div>
+                <h3 class="font-bold mb-2 group-hover:text-cvc-orange transition-colors">Segurança Total</h3>
+                <p class="text-gray-600">Pagamentos seguros e empresa confiável há mais de 50 anos no mercado.</p>
+            </div>
+            <div class="text-center group">
+                <div class="cvc-gradient text-white rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:bg-cvc-orange transition-all duration-300 hover-scale cvc-shadow">
+                    <i class="fas fa-dollar-sign text-2xl"></i>
+                </div>
+                <h3 class="font-bold mb-2 group-hover:text-cvc-orange transition-colors">Melhor Preço</h3>
+                <p class="text-gray-600">Garantimos o melhor preço do mercado ou devolvemos a diferença.</p>
+            </div>
+            <div class="text-center group">
+                <div class="cvc-gradient text-white rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:bg-cvc-orange transition-all duration-300 hover-scale cvc-shadow">
+                    <i class="fas fa-headset text-2xl"></i>
+                </div>
+                <h3 class="font-bold mb-2 group-hover:text-cvc-orange transition-colors">Atendimento 24h</h3>
+                <p class="text-gray-600">Suporte completo antes, durante e após sua viagem.</p>
+            </div>
+            <div class="text-center group">
+                <div class="cvc-gradient text-white rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:bg-cvc-orange transition-all duration-300 hover-scale cvc-shadow">
+                    <i class="fas fa-credit-card text-2xl"></i>
+                </div>
+                <h3 class="font-bold mb-2 group-hover:text-cvc-orange transition-colors">Facilidade de Pagamento</h3>
+                <p class="text-gray-600">Parcele em até 12x sem juros no cartão de crédito.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="bg-cvc-blue py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">📧 Receba nossas ofertas especiais</h2>
+        <p class="text-blue-100 mb-8">Cadastre-se e seja o primeiro a saber das melhores promoções</p>
+        <div class="max-w-md mx-auto flex">
+            <input type="email" placeholder="Seu melhor e-mail" 
+                   class="flex-1 px-4 py-3 rounded-l-lg focus:outline-none">
+            <button class="cvc-gradient text-white px-6 py-3 rounded-r-lg hover:opacity-90 transition-colors font-bold">
+                <i class="fas fa-paper-plane"></i> Cadastrar
+            </button>
+        </div>
+        <p class="text-xs text-blue-200 mt-4">Ao cadastrar-se, você concorda com nossos termos de uso e política de privacidade.</p>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">O que nossos clientes dizem</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-cvc-yellow rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Maria Silva</h4>
+                        <div class="text-cvc-yellow">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">"Viagem incrível para Cancún! Tudo perfeito, desde o atendimento até a hospedagem. Recomendo a CVC!"</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-cvc-yellow rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">João Santos</h4>
+                        <div class="text-cvc-yellow">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">"Excelente custo-benefício! Consegui parcelar em 12x sem juros e realizei o sonho da Disney com a família."</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-cvc-yellow rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Ana Costa</h4>
+                        <div class="text-cvc-yellow">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600">"Lua de mel nas Maldivas foi um sonho! Atendimento impecável e tudo organizado nos mínimos detalhes."</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

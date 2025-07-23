@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Minha Conta - CVC{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 flex items-center">
+                <i class="fas fa-user-circle text-cvc-yellow mr-3"></i> Minha Conta
+            </h1>
+            <span class="text-cvc-orange font-medium">Olá, {{ current_user.name }}! 👋</span>
+        </div>
+        
+        <div class="grid lg:grid-cols-4 gap-8">
+            <!-- Sidebar Menu -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6 cvc-shadow">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 cvc-gradient rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-user text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">{{ current_user.name }}</h3>
+                        <p class="text-gray-600 text-sm">{{ current_user.email }}</p>
+                    </div>
+                    
+                    <nav class="space-y-2">
+                        <a href="#" class="flex items-center px-4 py-2 text-white bg-cvc-yellow rounded-lg font-medium">
+                            <i class="fas fa-suitcase mr-3"></i>
+                            Minhas Viagens
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:text-cvc-orange hover:bg-yellow-50 rounded-lg transition-colors">
+                            <i class="fas fa-user mr-3"></i>
+                            Dados Pessoais
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:text-cvc-orange hover:bg-yellow-50 rounded-lg transition-colors">
+                            <i class="fas fa-credit-card mr-3"></i>
+                            Formas de Pagamento
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:text-cvc-orange hover:bg-yellow-50 rounded-lg transition-colors">
+                            <i class="fas fa-heart mr-3"></i>
+                            Lista de Desejos
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:text-cvc-orange hover:bg-yellow-50 rounded-lg transition-colors">
+                            <i class="fas fa-headset mr-3"></i>
+                            Suporte
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-3"></i>
+                            Sair da Conta
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-lg shadow-lg p-6 cvc-shadow">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-suitcase text-cvc-yellow mr-2"></i> Minhas Reservas
+                    </h2>
+                    
+                    {% if bookings %}
+                    <div class="space-y-6">
+                        {% for booking in bookings %}
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-300">
+                            <div class="flex flex-col md:flex-row gap-6">
+                                <img src="{{ booking[10] }}" alt="{{ booking[8] }}" class="w-full md:w-48 h-32 object-cover rounded-lg hover-scale">
+                                
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-800">{{ booking[8] }}</h3>
+                                        <span class="px-3 py-1 rounded-full text-sm font-medium
+                                            {% if booking[7] == 'confirmed' %}bg-green-100 text-green-800{% elif booking[7] == 'cancelled' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                            {% if booking[7] == 'confirmed' %}✅ Confirmada
+                                            {% elif booking[7] == 'cancelled' %}❌ Cancelada
+                                            {% else %}⏳ Pendente{% endif %}
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="text-gray-600 mb-4">{{ booking[9] }}</p>
+                                    
+                                    <div class="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar-check text-cvc-yellow mr-1"></i>
+                                            <span>Check-in: {{ booking[4] }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-calendar-times text-cvc-yellow mr-1"></i>
+                                            <span>Check-out: {{ booking[5] }}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-users text-cvc-yellow mr-1"></i>
+                                            <span>{{ booking[3] }} viajante(s)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-cvc-orange mb-2">
+                                        R$ {{ "%.2f"|format(booking[6]) }}
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-4">
+                                        Reserva #{{ booking[0] }}
+                                    </p>
+                                    
+                                    {% if booking[7] == 'confirmed' %}
+                                    <button onclick="cancelBooking({{ booking[0] }})" 
+                                            class="text-red-600 hover:text-red-800 text-sm font-medium bg-red-50 px-3 py-1 rounded-lg hover:bg-red-100 transition-colors">
+                                        <i class="fas fa-times"></i> Cancelar Reserva
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-16">
+                        <i class="fas fa-suitcase text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-600 mb-2">Você ainda não tem reservas</h3>
+                        <p class="text-gray-500 mb-6">Que tal planejar sua próxima viagem?</p>
+                        <a href="{{ url_for('search') }}" 
+                           class="cvc-gradient text-white px-6 py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-medium transform hover:scale-105">
+                            <i class="fas fa-search"></i> Explorar Pacotes
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Booking Modal -->
+<div id="cancelModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full cvc-shadow">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i> Cancelar Reserva
+            </h3>
+            <p class="text-gray-600 mb-6">Tem certeza que deseja cancelar esta reserva? Esta ação não pode ser desfeita.</p>
+            
+            <div class="flex gap-4">
+                <button onclick="closeCancelModal()" 
+                        class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors">
+                    Manter Reserva
+                </button>
+                <a id="confirmCancel" href="#" 
+                   class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors text-center">
+                    Cancelar Reserva
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function cancelBooking(bookingId) {
+    document.getElementById('confirmCancel').href = `/cancel_booking/${bookingId}`;
+    document.getElementById('cancelModal').classList.remove('hidden');
+}
+
+function closeCancelModal() {
+    document.getElementById('cancelModal').classList.add('hidden');
+}
+</script>
+{% endblock %}
