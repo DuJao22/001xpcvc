@@ -1,0 +1,6 @@
+Flask
+Flask-WTF
+WTForms
+Werkzeug
+Flask-Login
+gunicorn
